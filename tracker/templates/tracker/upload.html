@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,18 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f8ff;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(135deg, #ff6b6b, #ffd56b);
         }
+
         .container {
             background-color: #ffffff;
-            padding: 30px 40px;
+            padding: 2.5rem;
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
             max-width: 500px;
@@ -26,100 +27,131 @@
             box-sizing: border-box;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .container:hover {
             transform: scale(1.03);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         }
+
         h1 {
             text-align: center;
-            color: #333;
-            font-size: 26px;
-            margin-bottom: 25px;
-            font-weight: 700;
             color: #ff6b6b;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
         }
+
         label {
             display: block;
-            margin: 15px 0 5px;
+            margin: 1rem 0 0.5rem;
             color: #444;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 0.9rem;
         }
+
         input[type="file"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
             border: 2px solid #00bcd4;
             border-radius: 5px;
             background-color: #e0f7fa;
             cursor: pointer;
             transition: border-color 0.3s ease, background-color 0.3s ease;
         }
+
         input[type="file"]:hover {
             border-color: #0097a7;
             background-color: #b2ebf2;
         }
-        input[type="submit"] {
+
+        button[type="submit"] {
             width: 100%;
-            padding: 15px;
+            padding: 0.9rem;
             background-color: #ff6b6b;
             border: none;
             border-radius: 5px;
             color: #fff;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-bottom: 0.6rem;
         }
-        input[type="submit"]:hover {
+
+        button[type="submit"]:hover {
             background-color: #e64a19;
         }
+
         ::-webkit-file-upload-button {
             visibility: hidden;
         }
+
         input[type="file"]::before {
             content: 'Select File';
             display: inline-block;
             background: #00bcd4;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 0.6rem 1.25rem;
             outline: none;
             white-space: nowrap;
             cursor: pointer;
             border-radius: 5px;
-            margin-right: 10px;
+            margin-right: 0.6rem;
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
+
         input[type="file"]:hover::before {
             background-color: #0097a7;
         }
+
+        p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
         @media (max-width: 600px) {
             .container {
-                padding: 20px 30px;
+                padding: 1.5rem;
             }
+
             h1 {
-                font-size: 22px;
+                font-size: 1.4rem;
             }
-            input[type="submit"] {
-                padding: 12px;
+
+            button[type="submit"] {
+                padding: 0.75rem;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Form Checker</h1>
-        <form method="post" enctype="multipart/form-data">
+        <h1>Upload Files</h1>
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <label for="total_students">Total Students Excel:</label>
-            <input type="file" id="total_students" name="total_students" accept=".xlsx" required>
-            
-            <label for="filled_form">Filled Form Excel:</label>
-            <input type="file" id="filled_form" name="filled_form" accept=".xlsx" required>
-            
-            <input type="submit" value="Compare and Download">
+        
+            <label for="total_students">Upload Total Students File:</label>
+            <input type="file" name="total_students" id="total_students">
+        
+            <label for="filled_form">Upload Filled Form File:</label>
+            <input type="file" name="filled_form" id="filled_form">
+        
+            {% if total_students_name %}
+                <p>Selected file: {{ total_students_name }}</p>
+            {% endif %}
+        
+            {% if filled_form_name %}
+                <p>Selected file: {{ filled_form_name }}</p>
+            {% endif %}
+        
+            <button type="submit" name="compare_excel">Compare Excel</button>
+            <button type="submit" name="send_email">Send Email</button>
+            <button type="submit" name="send_whatsapp">Send WhatsApp</button>
         </form>
     </div>
 </body>
